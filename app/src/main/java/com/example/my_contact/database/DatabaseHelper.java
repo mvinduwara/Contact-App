@@ -79,4 +79,5 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         long result = db.delete(TABLE_CONTACTS, COLUMN_NAME + "=?", new String[]{name});
         db.close();
         return result > 0;
+    }
 }
