@@ -4,16 +4,46 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridLayout;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.example.my_contact.R;
+import com.google.android.material.button.MaterialButton;
 
 public class KeypadFragment extends Fragment {
+
+    private TextView tvDialedNumber;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // This links the Java class to your fragment_keypad.xml design
-        return inflater.inflate(R.layout.fragment_keypad, container, false);
+        View view = inflater.inflate(R.layout.fragment_keypad, container, false);
+
+        tvDialedNumber = view.findViewById(R.id.tvDialedNumber);
+        GridLayout gridLayout = view.findViewById(R.id.gridLayout);
+
+        for (int i = 0; i < gridLayout.getChildCount(); i++) {
+            View child = gridLayout.getChildAt(i);
+            if (child instanceof MaterialButton) {
+                MaterialButton button = (MaterialButton) child;
+
+                button.setOnClickListener(v -> {
+                    String buttonText = button.getText().toString();
+                    String numberToType = String.valueOf(buttonText.charAt(0));
+
+                    String currentText = tvDialedNumber.getText().toString();
+                    tvDialedNumber.setText(currentText + numberToType);
+                });
+            }
+        }
+
+        MaterialButton btnCall = view.findViewById(R.id.btnCall);
+        btnCall.setOnClickListener(v -> {
+            tvDialedNumber.setText("");
+        });
+
+        return view;
     }
 }
