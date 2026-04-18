@@ -24,6 +24,7 @@
             android:paddingTop="50dp"/>
 
         <TextView
+            android:id="@+id/btnEdit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
@@ -167,6 +168,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:nestedScrollingEnabled="false" />
+
+        <TextView
+            android:id="@+id/tvEmptyCalls"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="20dp"
+            android:gravity="center"
+            android:text="No recent calls"
+            android:textColor="#8E8E93"
+            android:textSize="14sp"
+            android:visibility="gone" />
     </LinearLayout>
 
 </LinearLayout>
