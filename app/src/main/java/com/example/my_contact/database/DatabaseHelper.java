@@ -136,4 +136,27 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
         return returnList;
     }
+
+    // --- EDIT / UPDATE CONTACT ---
+    public boolean updateContact(String oldName, String newName, String newPhone) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put("name", newName);
+        cv.put("phone", newPhone);
+
+        long result = db.update("contacts", cv, "name=?", new String[]{oldName});
+
+        if (result > 0 && !oldName.equals(newName)) {
+            ContentValues msgCv = new ContentValues();
+            msgCv.put("contact_name", newName);
+            db.update("messages", msgCv, "contact_name=?", new String[]{oldName});
+
+            ContentValues callCv = new ContentValues();
+            callCv.put("call_contact", newName);
+            db.update("call_logs", callCv, "call_contact=?", new String[]{oldName});
+        }
+
+        db.close();
+        return result > 0;
+    }
 }
