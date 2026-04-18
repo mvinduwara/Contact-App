@@ -31,7 +31,7 @@ public class ContactsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_contacts, container, false);
-        
+
         ImageButton btnAddContact = view.findViewById(R.id.btnAddContact);
         btnAddContact.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), com.example.my_contact.activity.AddContactActivity.class);
