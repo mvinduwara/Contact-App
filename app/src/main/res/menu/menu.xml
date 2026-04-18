@@ -12,8 +12,4 @@
         android:id="@+id/nav_contacts"
         android:icon="@android:drawable/ic_menu_myplaces"
         android:title="Contacts" />
-    <item
-        android:id="@+id/nav_keypad"
-        android:icon="@android:drawable/ic_menu_call"
-        android:title="Keypad" />
 </menu>
