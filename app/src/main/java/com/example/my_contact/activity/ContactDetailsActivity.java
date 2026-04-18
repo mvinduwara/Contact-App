@@ -3,6 +3,7 @@ package com.example.my_contact.activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,9 +21,8 @@ import java.util.Locale;
 public class ContactDetailsActivity extends AppCompatActivity {
 
     private RecyclerView rvCallHistory;
-    private CallHistoryAdapter adapter;
-    private List<CallRecord> callList;
     private DatabaseHelper dbHelper;
+    private TextView btnEdit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +37,7 @@ public class ContactDetailsActivity extends AppCompatActivity {
         TextView btnBack = findViewById(R.id.btnBack);
         LinearLayout btnMessage = findViewById(R.id.btnProfileMessage);
         LinearLayout btnProfileCall = findViewById(R.id.btnProfileCall);
+        TextView btnEdit = findViewById(R.id.btnEdit);
 
         rvCallHistory = findViewById(R.id.rvCallHistory);
         rvCallHistory.setLayoutManager(new LinearLayoutManager(this));
@@ -73,11 +74,27 @@ public class ContactDetailsActivity extends AppCompatActivity {
             intent.putExtra("CONTACT_NAME", name);
             startActivity(intent);
         });
+
+        btnEdit.setOnClickListener(v -> {
+            Intent intent = new Intent(ContactDetailsActivity.this, EditContactActivity.class);
+            intent.putExtra("CONTACT_NAME", name);
+            intent.putExtra("CONTACT_PHONE", phone);
+            startActivity(intent);
+        });
     }
 
     private void loadCallHistory(String contactName) {
-        callList = dbHelper.getCallLogs(contactName);
-        adapter = new CallHistoryAdapter(callList);
+        List<CallRecord> callList = dbHelper.getCallLogs(contactName);
+        CallHistoryAdapter adapter = new CallHistoryAdapter(callList);
         rvCallHistory.setAdapter(adapter);
+
+        TextView tvEmptyCalls = findViewById(R.id.tvEmptyCalls);
+        if (callList.isEmpty()) {
+            rvCallHistory.setVisibility(android.view.View.GONE);
+            tvEmptyCalls.setVisibility(android.view.View.VISIBLE);
+        } else {
+            rvCallHistory.setVisibility(android.view.View.VISIBLE);
+            tvEmptyCalls.setVisibility(android.view.View.GONE);
+        }
     }
 }
