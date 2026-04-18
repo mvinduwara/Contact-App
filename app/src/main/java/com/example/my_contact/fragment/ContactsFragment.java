@@ -18,6 +18,8 @@ import com.example.my_contact.R;
 import com.example.my_contact.adapter.ContactAdapter;
 import com.example.my_contact.database.DatabaseHelper;
 import com.example.my_contact.model.Contact;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +33,12 @@ public class ContactsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_contacts, container, false);
+
+        FloatingActionButton fabKeypad = view.findViewById(R.id.fabKeypad);
+        fabKeypad.setOnClickListener(v -> {
+            KeypadFragment keypadSheet = new KeypadFragment();
+            keypadSheet.show(getChildFragmentManager(), "KeypadBottomSheet");
+        });
 
         ImageButton btnAddContact = view.findViewById(R.id.btnAddContact);
         btnAddContact.setOnClickListener(v -> {
