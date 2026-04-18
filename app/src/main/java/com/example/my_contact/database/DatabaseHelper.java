@@ -2,8 +2,14 @@ package com.example.my_contact.database;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import com.example.my_contact.model.Contact;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -43,5 +49,28 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         long insert = db.insert(TABLE_CONTACTS, null, cv);
         return insert != -1;
+    }
+
+    public List<Contact> getAllContacts() {
+        List<Contact> returnList = new ArrayList<>();
+
+        String queryString = "SELECT * FROM " + TABLE_CONTACTS + " ORDER BY " + COLUMN_NAME + " ASC";
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(queryString, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                String contactName = cursor.getString(1);
+                String contactPhone = cursor.getString(2);
+
+                Contact newContact = new Contact(contactName, contactPhone);
+                returnList.add(newContact);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return returnList;
     }
 }
