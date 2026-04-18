@@ -49,6 +49,11 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
         return contactList.size();
     }
 
+    public void setFilteredList(List<Contact> filteredList) {
+        this.contactList = filteredList;
+        notifyDataSetChanged();
+    }
+
     public static class ContactViewHolder extends RecyclerView.ViewHolder {
         TextView tvName, tvPhone, tvInitial;
 
