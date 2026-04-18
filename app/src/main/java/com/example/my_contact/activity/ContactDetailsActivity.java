@@ -22,7 +22,6 @@ public class ContactDetailsActivity extends AppCompatActivity {
 
     private RecyclerView rvCallHistory;
     private DatabaseHelper dbHelper;
-    private TextView btnEdit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
