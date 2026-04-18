@@ -1,12 +1,17 @@
 package com.example.my_contact.activity;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.my_contact.R;
@@ -22,6 +27,9 @@ public class ContactDetailsActivity extends AppCompatActivity {
 
     private RecyclerView rvCallHistory;
     private DatabaseHelper dbHelper;
+    private static final int CALL_PERMISSION_CODE = 101;
+    private String currentName;
+    private String currentPhone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,50 +42,50 @@ public class ContactDetailsActivity extends AppCompatActivity {
         TextView tvDetailPhone = findViewById(R.id.tvDetailPhone);
         TextView tvDetailInitial = findViewById(R.id.tvDetailInitial);
         TextView btnBack = findViewById(R.id.btnBack);
+        TextView btnEdit = findViewById(R.id.btnEdit);
         LinearLayout btnMessage = findViewById(R.id.btnProfileMessage);
         LinearLayout btnProfileCall = findViewById(R.id.btnProfileCall);
-        TextView btnEdit = findViewById(R.id.btnEdit);
 
         rvCallHistory = findViewById(R.id.rvCallHistory);
         rvCallHistory.setLayoutManager(new LinearLayoutManager(this));
 
-        String name = getIntent().getStringExtra("CONTACT_NAME");
-        String phone = getIntent().getStringExtra("CONTACT_PHONE");
+        currentName = getIntent().getStringExtra("CONTACT_NAME");
+        currentPhone = getIntent().getStringExtra("CONTACT_PHONE");
 
-        if (name != null) {
-            tvDetailName.setText(name);
-            tvDetailInitial.setText(String.valueOf(name.charAt(0)).toUpperCase());
-            loadCallHistory(name);
+        if (currentName != null) {
+            tvDetailName.setText(currentName);
+            tvDetailInitial.setText(String.valueOf(currentName.charAt(0)).toUpperCase());
+            loadCallHistory(currentName);
         }
-        if (phone != null) {
-            tvDetailPhone.setText(phone);
+        if (currentPhone != null) {
+            tvDetailPhone.setText(currentPhone);
         }
 
         btnBack.setOnClickListener(v -> finish());
 
-        btnProfileCall.setOnClickListener(v -> {
-            if (phone != null && !phone.isEmpty()) {
-                String currentDate = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault()).format(new Date());
-                String currentTime = new SimpleDateFormat("hh:mm a", Locale.getDefault()).format(new Date());
-                dbHelper.addCallLog(name, "Outgoing Call", currentDate, currentTime);
-                loadCallHistory(name);
-
-                Intent intent = new Intent(Intent.ACTION_DIAL);
-                intent.setData(Uri.parse("tel:" + phone));
+        if(btnEdit != null) {
+            btnEdit.setOnClickListener(v -> {
+                Intent intent = new Intent(ContactDetailsActivity.this, EditContactActivity.class);
+                intent.putExtra("CONTACT_NAME", currentName);
+                intent.putExtra("CONTACT_PHONE", currentPhone);
                 startActivity(intent);
+            });
+        }
+
+        btnProfileCall.setOnClickListener(v -> {
+            if (currentPhone != null && !currentPhone.isEmpty()) {
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+                    makeDirectCall(currentName, currentPhone);
+                } else {
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CALL_PHONE}, CALL_PERMISSION_CODE);
+                }
             }
         });
 
         btnMessage.setOnClickListener(v -> {
             Intent intent = new Intent(ContactDetailsActivity.this, ChatActivity.class);
-            intent.putExtra("CONTACT_NAME", name);
-            startActivity(intent);
-        });
-
-        btnEdit.setOnClickListener(v -> {
-            Intent intent = new Intent(ContactDetailsActivity.this, EditContactActivity.class);
-            intent.putExtra("CONTACT_NAME", name);
-            intent.putExtra("CONTACT_PHONE", phone);
+            intent.putExtra("CONTACT_NAME", currentName);
+            intent.putExtra("CONTACT_PHONE", currentPhone);
             startActivity(intent);
         });
     }
@@ -88,12 +96,40 @@ public class ContactDetailsActivity extends AppCompatActivity {
         rvCallHistory.setAdapter(adapter);
 
         TextView tvEmptyCalls = findViewById(R.id.tvEmptyCalls);
-        if (callList.isEmpty()) {
-            rvCallHistory.setVisibility(android.view.View.GONE);
-            tvEmptyCalls.setVisibility(android.view.View.VISIBLE);
-        } else {
-            rvCallHistory.setVisibility(android.view.View.VISIBLE);
-            tvEmptyCalls.setVisibility(android.view.View.GONE);
+        if (tvEmptyCalls != null) {
+            if (callList.isEmpty()) {
+                rvCallHistory.setVisibility(android.view.View.GONE);
+                tvEmptyCalls.setVisibility(android.view.View.VISIBLE);
+            } else {
+                rvCallHistory.setVisibility(android.view.View.VISIBLE);
+                tvEmptyCalls.setVisibility(android.view.View.GONE);
+            }
+        }
+    }
+
+    private void makeDirectCall(String name, String phone) {
+        String currentDate = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault()).format(new Date());
+        String currentTime = new SimpleDateFormat("hh:mm a", Locale.getDefault()).format(new Date());
+        dbHelper.addCallLog(name, "Outgoing Call", currentDate, currentTime);
+        loadCallHistory(name);
+
+        Intent intent = new Intent(Intent.ACTION_CALL);
+        intent.setData(Uri.parse("tel:" + phone));
+        startActivity(intent);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == CALL_PERMISSION_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (currentName != null && currentPhone != null) {
+                    makeDirectCall(currentName, currentPhone);
+                }
+            } else {
+                Toast.makeText(this, "Call Permission Denied! Cannot make direct calls.", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }
