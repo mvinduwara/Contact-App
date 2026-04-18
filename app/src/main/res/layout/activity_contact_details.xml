@@ -19,7 +19,8 @@
             android:layout_centerVertical="true"
             android:text="&lt; Contacts"
             android:textColor="#0A84FF"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:paddingTop="50dp"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -28,7 +29,8 @@
             android:layout_centerVertical="true"
             android:text="Edit"
             android:textColor="#0A84FF"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:paddingTop="50dp"/>
     </RelativeLayout>
 
     <LinearLayout
@@ -36,7 +38,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="vertical"
-        android:paddingTop="20dp">
+        android:paddingTop="30dp">
 
         <TextView
             android:id="@+id/tvDetailInitial"

@@ -57,12 +57,9 @@ public class ContactDetailsActivity extends AppCompatActivity {
 
         btnProfileCall.setOnClickListener(v -> {
             if (phone != null && !phone.isEmpty()) {
-
                 String currentDate = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault()).format(new Date());
                 String currentTime = new SimpleDateFormat("hh:mm a", Locale.getDefault()).format(new Date());
-
                 dbHelper.addCallLog(name, "Outgoing Call", currentDate, currentTime);
-
                 loadCallHistory(name);
 
                 Intent intent = new Intent(Intent.ACTION_DIAL);

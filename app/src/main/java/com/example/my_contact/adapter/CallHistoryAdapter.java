@@ -28,7 +28,7 @@ public class CallHistoryAdapter extends RecyclerView.Adapter<CallHistoryAdapter.
     @Override
     public void onBindViewHolder(@NonNull CallViewHolder holder, int position) {
         CallRecord call = callList.get(position);
-        holder.tvCallType.setText(call.getType());
+        holder.tvCallType.setText(call.getCallType());
         holder.tvCallDate.setText(call.getDate());
         holder.tvCallTime.setText(call.getTime());
     }
