@@ -48,12 +48,19 @@ public class MainActivity extends AppCompatActivity {
 
                 if (itemId == R.id.nav_contacts) {
                     selectedFragment = new ContactsFragment();
-                } else if (itemId == R.id.nav_keypad) {
-                    selectedFragment = new KeypadFragment();
-                } else if (itemId == R.id.nav_favourites) {
+                }
+                else if (itemId == R.id.nav_favourites) {
                     selectedFragment = new FavouritesFragment();
-                } else if (itemId == R.id.nav_recents) {
+                }
+                else if (itemId == R.id.nav_recents) {
                     selectedFragment = new RecentsFragment();
+                }
+
+                else if (itemId == R.id.nav_keypad) {
+                    KeypadFragment keypadSheet = new KeypadFragment();
+                    keypadSheet.show(getSupportFragmentManager(), "KeypadBottomSheet");
+
+                    return false;
                 }
 
                 if (selectedFragment != null) {
