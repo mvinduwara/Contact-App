@@ -12,11 +12,11 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import com.example.my_contact.R;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.button.MaterialButton;
 
-public class KeypadFragment extends Fragment {
+public class KeypadFragment extends BottomSheetDialogFragment {
 
     private TextView tvDialedNumber;
 
