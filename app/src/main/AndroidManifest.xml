@@ -22,5 +22,6 @@
         </activity>
         <activity android:name=".activity.AddContactActivity" />
         <activity android:name=".activity.ContactDetailsActivity" />
+        <activity android:name=".activity.ChatActivity" />
     </application>
 </manifest>
