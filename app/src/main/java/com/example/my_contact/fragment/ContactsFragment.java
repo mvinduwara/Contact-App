@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -28,6 +30,7 @@ public class ContactsFragment extends Fragment {
     private RecyclerView recyclerView;
     private ContactAdapter adapter;
     private List<Contact> contactList;
+    private TextView tvEmptyContacts;
 
     @Nullable
     @Override
@@ -48,6 +51,7 @@ public class ContactsFragment extends Fragment {
 
         recyclerView = view.findViewById(R.id.recyclerViewContacts);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            tvEmptyContacts = view.findViewById(R.id.tvEmptyContacts);
 
         contactList = new ArrayList<>();
         adapter = new ContactAdapter(contactList);
@@ -80,6 +84,14 @@ public class ContactsFragment extends Fragment {
         DatabaseHelper dbHelper = new DatabaseHelper(getContext());
         contactList = dbHelper.getAllContacts();
         adapter.setFilteredList(contactList);
+
+        if (contactList.isEmpty()) {
+            recyclerView.setVisibility(View.GONE);
+            tvEmptyContacts.setVisibility(View.VISIBLE);
+        } else {
+            recyclerView.setVisibility(View.VISIBLE);
+            tvEmptyContacts.setVisibility(View.GONE);
+        }
     }
 
     private void filter(String text) {
