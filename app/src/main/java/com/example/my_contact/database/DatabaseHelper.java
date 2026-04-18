@@ -89,52 +89,61 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     // --- MESSAGES ---
-    public boolean addMessage(String contactName, String text, boolean isSentByMe) {
+    public long addMessage(String contactName, String text, boolean isSentByMe) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
-        cv.put(COLUMN_MSG_CONTACT, contactName);
-        cv.put(COLUMN_MSG_TEXT, text);
-        cv.put(COLUMN_MSG_IS_SENT, isSentByMe ? 1 : 0);
-        long insert = db.insert(TABLE_MESSAGES, null, cv);
+        cv.put("contact_name", contactName);
+        cv.put("message_text", text);
+        cv.put("is_sent_by_me", isSentByMe ? 1 : 0);
+        long id = db.insert("messages", null, cv);
         db.close();
-        return insert != -1;
+        return id;
     }
 
     public List<Message> getMessagesForContact(String contactName) {
-        List<Message> returnList = new ArrayList<>();
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_MESSAGES + " WHERE " + COLUMN_MSG_CONTACT + " = ?", new String[]{contactName});
+        List<Message> list = new ArrayList<>();
+        Cursor cursor = this.getReadableDatabase().rawQuery("SELECT * FROM messages WHERE contact_name = ?", new String[]{contactName});
         if (cursor.moveToFirst()) {
-            do { returnList.add(new Message(cursor.getString(2), cursor.getInt(3) == 1)); } while (cursor.moveToNext());
+            do {
+                // FETCHING ID (index 0)
+                list.add(new Message(cursor.getInt(0), cursor.getString(2), cursor.getInt(3) == 1));
+            } while (cursor.moveToNext());
         }
         cursor.close();
-        db.close();
-        return returnList;
+        return list;
+    }
+
+    public boolean deleteMessage(int msgId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.delete("messages", "msg_id=?", new String[]{String.valueOf(msgId)}) > 0;
     }
 
     // --- CALL LOGS ---
-    public boolean addCallLog(String contactName, String callType, String date, String time) {
+    public long addCallLog(String contactName, String callType, String date, String time) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
-        cv.put(COLUMN_CALL_CONTACT, contactName);
-        cv.put(COLUMN_CALL_TYPE, callType);
-        cv.put(COLUMN_CALL_DATE, date);
-        cv.put(COLUMN_CALL_TIME, time);
-        long insert = db.insert(TABLE_CALL_LOGS, null, cv);
+        cv.put("call_contact", contactName); cv.put("call_type", callType); cv.put("call_date", date); cv.put("call_time", time);
+        long id = db.insert("call_logs", null, cv);
         db.close();
-        return insert != -1;
+        return id;
     }
 
     public List<CallRecord> getCallLogs(String contactName) {
-        List<CallRecord> returnList = new ArrayList<>();
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_CALL_LOGS + " WHERE " + COLUMN_CALL_CONTACT + " = ? ORDER BY " + COLUMN_CALL_ID + " DESC", new String[]{contactName});
+        List<CallRecord> list = new ArrayList<>();
+        Cursor cursor = this.getReadableDatabase().rawQuery("SELECT * FROM call_logs WHERE call_contact = ? ORDER BY call_id DESC", new String[]{contactName});
         if (cursor.moveToFirst()) {
-            do { returnList.add(new CallRecord(cursor.getString(2), cursor.getString(3), cursor.getString(4))); } while (cursor.moveToNext());
+            do {
+                // FETCHING ID (index 0)
+                list.add(new CallRecord(cursor.getInt(0), cursor.getString(2), cursor.getString(3), cursor.getString(4)));
+            } while (cursor.moveToNext());
         }
         cursor.close();
-        db.close();
-        return returnList;
+        return list;
+    }
+
+    public boolean deleteCallLog(int callId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.delete("call_logs", "call_id=?", new String[]{String.valueOf(callId)}) > 0;
     }
 
     // --- EDIT / UPDATE CONTACT ---

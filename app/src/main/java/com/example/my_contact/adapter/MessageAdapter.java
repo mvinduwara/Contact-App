@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.my_contact.R;
+import com.example.my_contact.database.DatabaseHelper;
 import com.example.my_contact.model.Message;
 import java.util.List;
 
@@ -36,6 +37,23 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             holder.messageRoot.setGravity(Gravity.START);
             holder.tvMessageText.setBackgroundResource(R.drawable.bg_chat_received);
         }
+
+        holder.itemView.setOnLongClickListener(v -> {
+            new android.app.AlertDialog.Builder(v.getContext())
+                    .setTitle("Delete Message")
+                    .setMessage("Remove this message?")
+                    .setPositiveButton("Delete", (dialog, which) -> {
+                        DatabaseHelper db = new DatabaseHelper(v.getContext());
+                        if (db.deleteMessage(message.getId())) {
+                            messageList.remove(position);
+                            notifyItemRemoved(position);
+                            notifyItemRangeChanged(position, messageList.size());
+                        }
+                    })
+                    .setNegativeButton("Cancel", null)
+                    .show();
+            return true;
+        });
     }
 
     @Override

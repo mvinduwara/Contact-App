@@ -65,9 +65,10 @@ public class ChatActivity extends AppCompatActivity {
         btnSendMessage.setOnClickListener(v -> {
             String text = etMessageInput.getText().toString().trim();
             if (!text.isEmpty()) {
-                boolean isSaved = dbHelper.addMessage(contactName, text, true);
-                if (isSaved) {
-                    messageList.add(new Message(text, true));
+
+                long newId = dbHelper.addMessage(contactName, text, true);
+                if (newId != -1) {
+                    messageList.add(new Message((int)newId, text, true));
                     messageAdapter.notifyItemInserted(messageList.size() - 1);
                     recyclerViewMessages.smoothScrollToPosition(messageList.size() - 1);
                     etMessageInput.setText("");
