@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -17,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.my_contact.R;
 import com.example.my_contact.adapter.ContactAdapter;
+import com.example.my_contact.database.DatabaseHelper;
 import com.example.my_contact.model.Contact;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,15 +42,6 @@ public class ContactsFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         contactList = new ArrayList<>();
-        contactList.add(new Contact("Alice Smith", "+1 555-0101"));
-        contactList.add(new Contact("Bob Johnson", "+1 555-0102"));
-        contactList.add(new Contact("Charlie Brown", "+1 555-0103"));
-        contactList.add(new Contact("Diana Prince", "+1 555-0104"));
-        contactList.add(new Contact("Ethan Hunt", "+1 555-0105"));
-        contactList.add(new Contact("Fiona Gallagher", "+1 555-0106"));
-        contactList.add(new Contact("George Lucas", "+1 555-0107"));
-        contactList.add(new Contact("Hannah Abbott", "+1 555-0108"));
-
         adapter = new ContactAdapter(contactList);
         recyclerView.setAdapter(adapter);
 
@@ -71,6 +62,18 @@ public class ContactsFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadContactsFromDatabase();
+    }
+
+    private void loadContactsFromDatabase() {
+        DatabaseHelper dbHelper = new DatabaseHelper(getContext());
+        contactList = dbHelper.getAllContacts();
+        adapter.setFilteredList(contactList);
+    }
+
     private void filter(String text) {
         List<Contact> filteredList = new ArrayList<>();
 
@@ -79,11 +82,6 @@ public class ContactsFragment extends Fragment {
                 filteredList.add(item);
             }
         }
-
-        if (filteredList.isEmpty()) {
-            Toast.makeText(getContext(), "No contact found", Toast.LENGTH_SHORT).show();
-        } else {
-            adapter.setFilteredList(filteredList);
-        }
+        adapter.setFilteredList(filteredList);
     }
 }
