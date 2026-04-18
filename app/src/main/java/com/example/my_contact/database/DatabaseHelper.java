@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.example.my_contact.model.CallRecord;
 import com.example.my_contact.model.Contact;
 
 import java.util.ArrayList;
@@ -14,8 +15,7 @@ import java.util.List;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "contactsApp.db";
-    private static final int DATABASE_VERSION = 1;
-
+    private static final int DATABASE_VERSION = 2;
     private static final String TABLE_CONTACTS = "contacts";
     private static final String COLUMN_ID = "id";
     private static final String COLUMN_NAME = "name";
@@ -31,13 +31,46 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + COLUMN_NAME + " TEXT, "
                 + COLUMN_PHONE + " TEXT)";
+
+        String createCallTable = "CREATE TABLE calls (id INTEGER PRIMARY KEY AUTOINCREMENT, contact_name TEXT, call_type TEXT, call_date TEXT, call_time TEXT)";
+        db.execSQL(createCallTable);
         db.execSQL(createTableStatement);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CONTACTS);
+        db.execSQL("DROP TABLE IF EXISTS calls");
         onCreate(db);
+    }
+
+    public boolean addCallLog(String contactName, String type, String date, String time) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put("contact_name", contactName);
+        cv.put("call_type", type);
+        cv.put("call_date", date);
+        cv.put("call_time", time);
+        long insert = db.insert("calls", null, cv);
+        return insert != -1;
+    }
+
+    public List<CallRecord> getCallLogs(String contactName) {
+        List<CallRecord> returnList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM calls WHERE contact_name = ? ORDER BY id DESC", new String[]{contactName});
+
+        if (cursor.moveToFirst()) {
+            do {
+                String type = cursor.getString(2);
+                String date = cursor.getString(3);
+                String time = cursor.getString(4);
+                returnList.add(new CallRecord(type, date, time));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return returnList;
     }
 
     public boolean addOne(String name, String phone) {
