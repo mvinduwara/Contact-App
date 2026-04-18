@@ -2,11 +2,14 @@ package com.example.my_contact.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageButton;
-
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -28,7 +31,7 @@ public class ContactsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_contacts, container, false);
-
+        
         ImageButton btnAddContact = view.findViewById(R.id.btnAddContact);
         btnAddContact.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), com.example.my_contact.activity.AddContactActivity.class);
@@ -51,6 +54,36 @@ public class ContactsFragment extends Fragment {
         adapter = new ContactAdapter(contactList);
         recyclerView.setAdapter(adapter);
 
+        EditText searchBar = view.findViewById(R.id.searchBar);
+        searchBar.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                filter(s.toString());
+            }
+        });
+
         return view;
+    }
+
+    private void filter(String text) {
+        List<Contact> filteredList = new ArrayList<>();
+
+        for (Contact item : contactList) {
+            if (item.getName().toLowerCase().contains(text.toLowerCase())) {
+                filteredList.add(item);
+            }
+        }
+
+        if (filteredList.isEmpty()) {
+            Toast.makeText(getContext(), "No contact found", Toast.LENGTH_SHORT).show();
+        } else {
+            adapter.setFilteredList(filteredList);
+        }
     }
 }
