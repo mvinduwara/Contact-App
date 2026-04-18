@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/messageRoot"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingHorizontal="8dp"
+    android:paddingVertical="4dp"
+    android:gravity="end"> <TextView
+    android:id="@+id/tvMessageText"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:maxWidth="260dp"
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="10dp"
+    android:text="Message text goes here"
+    android:textColor="#FFFFFF"
+    android:textSize="16sp"
+    android:background="@drawable/bg_chat_sent"/> </LinearLayout>

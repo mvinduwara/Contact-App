@@ -2,6 +2,7 @@ package com.example.my_contact.activity;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -48,8 +49,6 @@ public class MainActivity extends AppCompatActivity {
 
                 if (itemId == R.id.nav_contacts) {
                     selectedFragment = new ContactsFragment();
-                } else if (itemId == R.id.nav_keypad) {
-                    selectedFragment = new KeypadFragment();
                 } else if (itemId == R.id.nav_favourites) {
                     selectedFragment = new FavouritesFragment();
                 } else if (itemId == R.id.nav_recents) {

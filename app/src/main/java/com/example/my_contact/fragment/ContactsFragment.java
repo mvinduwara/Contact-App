@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -18,6 +20,8 @@ import com.example.my_contact.R;
 import com.example.my_contact.adapter.ContactAdapter;
 import com.example.my_contact.database.DatabaseHelper;
 import com.example.my_contact.model.Contact;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,11 +30,18 @@ public class ContactsFragment extends Fragment {
     private RecyclerView recyclerView;
     private ContactAdapter adapter;
     private List<Contact> contactList;
+    private TextView tvEmptyContacts;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_contacts, container, false);
+
+        FloatingActionButton fabKeypad = view.findViewById(R.id.fabKeypad);
+        fabKeypad.setOnClickListener(v -> {
+            KeypadFragment keypadSheet = new KeypadFragment();
+            keypadSheet.show(getChildFragmentManager(), "KeypadBottomSheet");
+        });
 
         ImageButton btnAddContact = view.findViewById(R.id.btnAddContact);
         btnAddContact.setOnClickListener(v -> {
@@ -40,6 +51,7 @@ public class ContactsFragment extends Fragment {
 
         recyclerView = view.findViewById(R.id.recyclerViewContacts);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            tvEmptyContacts = view.findViewById(R.id.tvEmptyContacts);
 
         contactList = new ArrayList<>();
         adapter = new ContactAdapter(contactList);
@@ -72,6 +84,14 @@ public class ContactsFragment extends Fragment {
         DatabaseHelper dbHelper = new DatabaseHelper(getContext());
         contactList = dbHelper.getAllContacts();
         adapter.setFilteredList(contactList);
+
+        if (contactList.isEmpty()) {
+            recyclerView.setVisibility(View.GONE);
+            tvEmptyContacts.setVisibility(View.VISIBLE);
+        } else {
+            recyclerView.setVisibility(View.VISIBLE);
+            tvEmptyContacts.setVisibility(View.GONE);
+        }
     }
 
     private void filter(String text) {

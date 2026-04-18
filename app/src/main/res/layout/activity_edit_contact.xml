@@ -16,7 +16,7 @@
         android:gravity="center_vertical">
 
         <TextView
-            android:id="@+id/btnCancel"
+            android:id="@+id/btnEditCancel"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -27,18 +27,18 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New Contact"
+            android:text="Edit Contact"
             android:textColor="#FFFFFF"
             android:textSize="18sp"
             android:textStyle="bold"
             android:gravity="center" />
 
         <TextView
-            android:id="@+id/btnDone"
+            android:id="@+id/btnEditSave"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Done"
+            android:text="Save"
             android:gravity="end"
             android:textColor="#0A84FF"
             android:textSize="18sp"
@@ -60,7 +60,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="8dp"
-        android:text="Add Photo"
+        android:text="Edit Photo"
         android:textColor="#0A84FF"
         android:textSize="16sp" />
 
@@ -73,7 +73,7 @@
         android:paddingHorizontal="16dp">
 
         <EditText
-            android:id="@+id/etFirstName"
+            android:id="@+id/etEditName"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@null"
@@ -88,7 +88,7 @@
             android:background="#38383A" />
 
         <EditText
-            android:id="@+id/etPhone"
+            android:id="@+id/etEditPhone"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@null"
