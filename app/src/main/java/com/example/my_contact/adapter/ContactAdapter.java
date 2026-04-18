@@ -1,5 +1,6 @@
 package com.example.my_contact.adapter;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +35,13 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
         if (contact.getName() != null && !contact.getName().isEmpty()) {
             holder.tvInitial.setText(String.valueOf(contact.getName().charAt(0)).toUpperCase());
         }
+
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(v.getContext(), com.example.my_contact.activity.ContactDetailsActivity.class);
+            intent.putExtra("CONTACT_NAME", contact.getName());
+            intent.putExtra("CONTACT_PHONE", contact.getPhone());
+            v.getContext().startActivity(intent);
+        });
     }
 
     @Override
