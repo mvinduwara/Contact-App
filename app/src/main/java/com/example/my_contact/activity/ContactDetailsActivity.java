@@ -35,6 +35,7 @@ public class ContactDetailsActivity extends AppCompatActivity {
         TextView tvDetailPhone = findViewById(R.id.tvDetailPhone);
         TextView tvDetailInitial = findViewById(R.id.tvDetailInitial);
         TextView btnBack = findViewById(R.id.btnBack);
+        LinearLayout btnMessage = findViewById(R.id.btnProfileMessage);
         LinearLayout btnProfileCall = findViewById(R.id.btnProfileCall);
 
         rvCallHistory = findViewById(R.id.rvCallHistory);
@@ -68,6 +69,12 @@ public class ContactDetailsActivity extends AppCompatActivity {
                 intent.setData(Uri.parse("tel:" + phone));
                 startActivity(intent);
             }
+        });
+
+        btnMessage.setOnClickListener(v -> {
+            Intent intent = new Intent(ContactDetailsActivity.this, ChatActivity.class);
+            intent.putExtra("CONTACT_NAME", name);
+            startActivity(intent);
         });
     }
 
