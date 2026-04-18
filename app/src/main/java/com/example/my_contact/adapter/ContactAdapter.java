@@ -69,7 +69,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
                     .setNegativeButton("No", null)
                     .show();
 
-            return true; 
+            return true;
         });
     }
 
