@@ -34,7 +34,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         bottomNavigationView = findViewById(R.id.bottomNavigation);
-
         if (savedInstanceState == null) {
             loadFragment(new ContactsFragment());
             bottomNavigationView.setSelectedItemId(R.id.nav_contacts);
