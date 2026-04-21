@@ -89,7 +89,6 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
     }
-
     private void sendRealSms(String text) {
         try {
             SmsManager smsManager = SmsManager.getDefault();
@@ -112,7 +111,6 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
         if (requestCode == SMS_PERMISSION_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 String text = etMessageInput.getText().toString().trim();
